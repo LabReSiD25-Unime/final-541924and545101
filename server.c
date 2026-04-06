@@ -2,6 +2,7 @@
 #include "http.h"
 #include "logger.h"
 #include "routes.h"
+#include "sync.h"
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -10,6 +11,9 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 4096
+#define MAX_CONCURRENT_CLIENTS 10
+
+static sem_t client_slots_sem;
 
 /* Struttura passata al thread */
 typedef struct {
@@ -49,6 +53,7 @@ static void *handle_client(void *arg) {
   }
 
   close(client_socket);
+  sync_sem_post(&client_slots_sem);
   return NULL;
 }
 
@@ -81,16 +86,25 @@ void server_start(int port) {
     exit(EXIT_FAILURE);
   }
 
-  logger_log("Server avviato sulla porta %d...", port);
+  /* Inizializzazione semaforo per limite thread concorrenti */
+  sync_sem_init(&client_slots_sem, MAX_CONCURRENT_CLIENTS);
+
+  logger_log("Server avviato sulla porta %d (max %d client concorrenti)...",
+             port, MAX_CONCURRENT_CLIENTS);
 
   while (1) {
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
+
+    /* Aspettiamo uno slot libero per gestire il client */
+    sync_sem_wait(&client_slots_sem);
+
     int client_socket =
         accept(server_socket, (struct sockaddr *)&client_addr, &client_len);
 
     if (client_socket == -1) {
       logger_error("Errore accept");
+      sync_sem_post(&client_slots_sem);
       continue;
     }
 
