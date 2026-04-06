@@ -1,136 +1,63 @@
-# Server HTTP concorrente per la gestione di prenotazioni di aule studio
+# Concurrent HTTP Server - Study Room Reservation
 
-## Descrizione del progetto
+Progetto n.1 per il corso di **Laboratorio di Reti e Sistemi Distribuiti**.
+Il server implementa un sistema concorrente in C per la gestione delle prenotazioni di aule studio, conforme alle specifiche **RFC 2616 (HTTP/1.1)**.
 
-Questo progetto realizza un server HTTP concorrente in linguaggio C per la gestione di prenotazioni di aule studio o postazioni disponibili.  
-L'obiettivo è permettere a più client di inviare richieste al server per visualizzare lo stato delle stanze, consultare le prenotazioni effettuate, inserire nuove prenotazioni e cancellarne di esistenti.
+## Caratteristiche Principali
+- **Multi-threading**: Gestione parallela dei client tramite `pthreads`.
+- **Sincronizzazione**: Utilizzo di `mutex` per l'integrità dei dati e `semafori` per il controllo delle risorse (max 10 client).
+- **Prototipo HTTP/1.1**: Supporto per i metodi `GET, POST, PUT, DELETE`.
+- **Status Code**: Gestione di `200, 201, 204, 400, 401, 404, 405`.
+- **Autenticazione**: Tutte le richieste richiedono l'header `X-Auth: labresid2025`.
 
-Il progetto è stato organizzato in modo modulare, separando la logica applicativa dalla parte di rete e dalla sincronizzazione.
+## Struttura del Progetto
+- `bin/`: Contiene l'eseguibile compilato (`server`).
+- `src/`: File sorgente (`.c`).
+- `include/`: File header (`.h`).
+- `obj/`: File oggetto compilati.
+- `scripts/`: Script Bash per test e verifica.
+- `data/`: Database testuale (`bookings.txt`).
+- `tests/`: Test unitari secondari.
 
-## Caso d'uso
+## Come Iniziare
 
-Il server simula un piccolo sistema di prenotazione di aule studio.
+### Prerequisiti
+- GCC (GNU Compiler Collection)
+- Make
+- Terminale Linux
 
-Ogni stanza ha un numero limitato di posti disponibili.  
-Un client può:
-
-- visualizzare lo stato delle stanze
-- visualizzare l'elenco delle prenotazioni
-- effettuare una prenotazione indicando nome utente e stanza
-- cancellare una prenotazione tramite id
-
-In presenza di più richieste concorrenti, il sistema dovrà garantire la coerenza dei dati usando meccanismi di sincronizzazione come mutex e semafori.
-
-## Struttura del progetto
-
-Il progetto è suddiviso in moduli.
-
-### Moduli principali
-
-- `booking.c / booking.h`  
-  Gestione dell'archivio delle prenotazioni in memoria.
-
-- `storage.c / storage.h`  
-  Salvataggio e caricamento delle prenotazioni da file.
-
-- `app.c / app.h`  
-  Logica applicativa richiamabile dalle route del server.
-
-- `server.c / server.h`  
-  Gestione del server socket, accettazione connessioni e thread client.
-
-- `http.c / http.h`  
-  Parsing delle richieste HTTP e costruzione delle risposte.
-
-- `routes.c / routes.h`  
-  Smistamento delle richieste verso le funzioni applicative corrette.
-
-- `sync.c / sync.h`  
-  Gestione di mutex e semafori per la sincronizzazione.
-
-- `logger.c / logger.h`  
-  Logging delle richieste e delle operazioni principali.
-
-## Funzionalità principali
-
-Il sistema supporta le seguenti operazioni:
-
-- visualizzazione delle stanze disponibili
-- visualizzazione delle prenotazioni attive
-- inserimento di una nuova prenotazione
-- cancellazione di una prenotazione esistente
-- salvataggio su file delle prenotazioni
-- caricamento da file delle prenotazioni
-
-## Configurazione del modello dati
-
-Nel modulo prenotazioni sono state definite le seguenti costanti:
-
-- `MAX_BOOKINGS = 100`
-- `MAX_ROOMS = 5`
-- `SLOTS_PER_ROOM = 4`
-
-Ogni prenotazione contiene:
-
-- id univoco
-- nome dell'utente
-- id della stanza
-- flag di attivazione
-
-## Endpoint previsti
-
-Il server HTTP è pensato per supportare i seguenti endpoint:
-
-- `GET /rooms`  
-  Restituisce lo stato delle stanze con posti occupati e liberi.
-
-- `GET /bookings`  
-  Restituisce l'elenco delle prenotazioni attive.
-
-- `POST /book`  
-  Inserisce una nuova prenotazione.
-
-- `DELETE /book?id=...`  
-  Cancella una prenotazione tramite id.
-
-## Esempi di utilizzo logico
-
-### Visualizzazione stanze
-`GET /rooms`
-
-### Visualizzazione prenotazioni
-`GET /bookings`
-
-### Nuova prenotazione
-`POST /book`
-
-Parametri possibili:
-- `user=Mario`
-- `room_id=2`
-
-### Cancellazione prenotazione
-`DELETE /book?id=3`
-
-## Persistenza dei dati
-
-Le prenotazioni vengono salvate nel file:
-
-`data/bookings.txt`
-
-Il formato usato per ogni riga è il seguente:
-
-`id;utente;room_id;active`
-
-Esempio:
-
-`1;Mario;2;1`
-
-## Compilazione del test locale
-
-Per verificare il corretto funzionamento del modulo prenotazioni senza il server HTTP, è possibile compilare il file di test.
-
-### Se i file si trovano tutti nella stessa cartella
-
+### Compilazione
+Per compilare il progetto, eseguire il comando nella root:
 ```bash
-gcc -Wall -Wextra -o test_booking test_booking.c booking.c storage.c app.c
-./test_booking
+make
+```
+
+### Avvio del Server
+```bash
+./server 8080
+```
+
+### Verifica e Test
+Per eseguire una verifica automatica di tutti i requisiti (metodi e status code):
+```bash
+./scripts/verify_all.sh
+```
+
+Per eseguire un test di carico concorrente (20 richieste parallele):
+```bash
+./scripts/load_test.sh
+```
+
+## API Endpoints
+
+| Metodo | Endpoint | Descrizione | Status Code |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/rooms` | Elenco stato aule (posti liberi/occupati) | 200, 401 |
+| `GET` | `/bookings` | Elenco di tutte le prenotazioni attive | 200, 401 |
+| `POST` | `/book` | Effettua una nuova prenotazione | 201, 400, 401 |
+| `PUT` | `/book` | Aggiorna l'utente di una prenotazione tramite ID | 200, 404, 401 |
+| `DELETE`| `/book` | Cancella una prenotazione tramite ID | 204, 404, 401 |
+
+---
+**Nota**: Per utilizzare i comandi `curl` manualmente, ricordarsi di includere l'header di autenticazione:
+`curl -H "X-Auth: labresid2025" http://localhost:8080/rooms`
