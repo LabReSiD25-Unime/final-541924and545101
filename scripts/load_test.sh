@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Get the script's directory and root directory
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$ROOT_DIR" || exit 1
+
 # Configuration
 PORT=${1:-8080}
 URL="http://localhost:$PORT"

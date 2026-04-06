@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# Configurazione
-PORT=8088
+# Get the script's directory and root directory
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$ROOT_DIR" || exit 1
+
+# Configuration
+PORT=8086
 URL="http://localhost:$PORT"
 AUTH_HEADER="X-Auth: labresid2025"
 DATA_FILE="data/bookings.txt"
