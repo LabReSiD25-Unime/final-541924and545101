@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 20:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 20:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1112,13 +1112,7 @@ e 139.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
-dvips/lm/lm-ec.enc} <../assets/logo_unime_orizontale.png>]
-File: ../assets/logo_unime_orizontale.png Graphic file (type png)
-<use ../assets/logo_unime_orizontale.png>
-Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 155.
-(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [2] (./Report.toc
+dvips/lm/lm-ec.enc} <../assets/logo_unime_orizontale.png>] (./Report.toc
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
 .
 
@@ -1202,17 +1196,10 @@ File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
 e 176.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.176 \newpage
-               [2{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}]
+ [2{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}]
 LaTeX Font Info:    Trying to load font information for T1+lmss on input line 2
 24.
-
-(/usr/share/texmf/tex/latex/lm/t1lmss.fd
+ (/usr/share/texmf/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -1233,16 +1220,10 @@ s been already used, duplicate ignored
                                                   \__shipout_drop_firstpage_...
 l.229 \newpage
               ]
-Overfull \hbox (43.86958pt too wide) in paragraph at lines 237--238
-[]\T1/lmr/m/n/12 (-20) I \T1/lmr/m/it/12 (-20) Worker \T1/lmr/m/n/12 (-20) fun-
-gono da \T1/lmr/bx/n/12 (-20) Con-suma-tori\T1/lmr/m/n/12 (-20) . All'avvio, es
-si chia-mano \T1/lmtt/m/n/12 sem_wait(&pool->queue_sem)\T1/lmr/m/n/12 (-20) .
- []
-
 \g__tcobox_out_iow=\write7
 \openout7 = `Report.listing'.
 
-(./Report.listing
+ (./Report.listing
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
 15.
  (/usr/share/texmf/tex/latex/lm/ts1lmtt.fd
@@ -1261,65 +1242,44 @@ File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
 e 263.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [4]
+
+[4]
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
 e 266.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
  [5]
-Underfull \hbox (badness 7168) in paragraph at lines 287--287
-[]\T1/lmr/m/n/12 (+20) Parsing body URL-Encoded.
- []
-
-
-Overfull \hbox (32.02806pt too wide) in paragraph at lines 282--292
- [][] 
- []
-
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 296.
+e 298.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
-[6{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}
+ [6{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.296 \newpage
+l.298 \newpage
               ]
-Overfull \hbox (19.53493pt too wide) in paragraph at lines 298--299
-\T1/lmr/m/n/12 (-20) Al fine di cer-ti-fi-care il com-por-ta-mento de-ter-min-i
-s-tico dei \T1/lmr/m/it/12 (-20) Mu-tex \T1/lmr/m/n/12 (-20) ed il through-put 
-dell'applicativo,
- []
-
 \openout7 = `Report.listing'.
 
-(./Report.listing)
+ (./Report.listing)
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 317.
+e 319.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
  [7{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/d
 vips/lm/lm-mathit.enc}]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 325.
-
-Overfull \hbox (5.78885pt too wide) in paragraph at lines 325--326
-[]\T1/lmr/bx/n/12 (-20) Event-Loop I/O (\T1/lmtt/b/n/12 epoll\T1/lmr/bx/n/12 (-
-20) )\T1/lmr/m/n/12 (-20) : Al posto delle chia-mate bloc-canti di \T1/lmtt/m/n
-/12 read()\T1/lmr/m/n/12 (-20) , l'integrazione
- []
-
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 327.
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 329.
+e 331.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
-[8] (./Report.aux)
+ [8] (./Report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -1328,11 +1288,11 @@ Package rerunfilecheck Info: File `Report.out' has not changed.
 (rerunfilecheck)             Checksum: 03FCF6732232FF9818D3E145E4D3428A;2905.
  ) 
 Here is how much of TeX's memory you used:
- 41254 strings out of 476171
- 943249 string characters out of 5795119
+ 41252 strings out of 476171
+ 943229 string characters out of 5795119
  1968975 words of memory out of 5000000
  62426 multiletter control sequences out of 15000+600000
- 625334 words of font info for 139 fonts, out of 8000000 for 9000
+ 625205 words of font info for 138 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,17n,93p,1003b,1947s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/ty
@@ -1344,10 +1304,10 @@ i12.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/
 fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10
 .pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts
 /type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
-Output written on Report.pdf (10 pages, 469889 bytes).
+Output written on Report.pdf (9 pages, 469097 bytes).
 PDF statistics:
- 257 PDF objects out of 1000 (max. 8388607)
- 209 compressed objects within 3 object streams
+ 254 PDF objects out of 1000 (max. 8388607)
+ 207 compressed objects within 3 object streams
  56 named destinations out of 1000 (max. 500000)
  42114 words of extra memory for PDF output out of 42996 (max. 10000000)
 

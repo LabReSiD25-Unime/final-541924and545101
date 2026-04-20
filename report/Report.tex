@@ -11,7 +11,7 @@
   top=3cm,
   bottom=2.5cm,
   headheight=140pt
-]{geometry}
+]{geometry} 
 
 \usepackage[
     colorlinks=true,
@@ -135,18 +135,18 @@
 \begin{titlepage}
     \thispagestyle{empty}
     \centering
-    \vspace*{1.5cm}
-    \includegraphics[width=7.5cm]{../assets/logo_unime_orizontale.png}\par\vspace{1cm}
-    \vspace{2cm}
+    \vspace*{0.5cm}
+    \includegraphics[width=7.5cm]{../assets/logo_unime_orizontale.png}\par\vspace{0.5cm}
+    \vspace{0.5cm}
     {\Large \textbf{Università degli Studi di Messina}\par}
     {\large Dipartimento di Scienze Matematiche e Informatiche,\\Scienze Fisiche e Scienze della Terra (MIFT)\\ Corso di Laurea Triennale in Informatica (L-31)\par}
-    \vspace*{1.5cm}
+    \vspace*{1cm}
     {\Large \textbf{Laboratorio di Reti e Sistemi Distribuiti}\par}
-    \vspace{1.5cm}
+    \vspace{1cm}
     {\huge \textbf{PROGETTO 1:}\\
     \vspace{0.3cm}
     Server HTTP Concorrente per la Prenotazione di Aule Studio\par}
-    \vspace{3cm}
+    \vspace{1.5cm}
     {\Large Massimo Mantineo (Matricola: 541924) \par}
     \vspace{0.2cm}
     {\Large Pierluca Tino Castorina (Matricola: 545101) \par}
@@ -233,8 +233,8 @@ Il problema principale riscontrato nei server concorrenti è legato alla manipol
 \subsection{Pattern Produttore-Consumatore con Semafori}
 Per gestire l'inserimento e l'estrazione dalla \texttt{Job Queue}, è stato applicato il classico paradigma \textit{Producer-Consumer}.
 \begin{itemize}
-    \item Il dispatcher agisce da \textbf{Produttore}. Una volta creato un nuovo job, incrementa il conteggio del semaforo anonimo tramite l'istruzione \texttt{sem\_post(\&pool->queue\_sem)}.
-    \item I \textit{Worker} fungono da \textbf{Consumatori}. All'avvio, essi chiamano \texttt{sem\_wait(\&pool->queue\_sem)}. Se la coda è vuota, il kernel blocca il thread (mettendolo in \textit{sleep}), evitando sprechi inutili di CPU (\textit{busy-waiting}).
+    \item Il dispatcher agisce da \textbf{Produttore}. Creato un job, incrementa il conteggio del semaforo con \texttt{sem\_post(\&pool->queue\_sem)}.
+    \item I \textit{Worker} sono i \textbf{Consumatori}. All'avvio chiamano \texttt{sem\_wait(\&pool->queue\_sem)}. A coda vuota, il kernel blocca il thread in stato di \textit{sleep}, evitando di consumare cicli di CPU (\textit{busy-waiting}).
 \end{itemize}
 
 \subsection{Mutua Esclusione sui Dati delle Prenotazioni}
@@ -279,23 +279,25 @@ La seguente tabella mappa le direttive HTTP sull'array in memoria:
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{@{}llp{5.8cm}l@{}}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}llp{6.5cm}l@{}}
         \toprule
         \textbf{Metodo HTTP} & \textbf{Endpoint} & \textbf{Operazione Interna (C)} & \textbf{Status Code} \\
         \midrule
-        \texttt{GET} & \texttt{/reservations} & Mutex Lock $\rightarrow$ Lettura dell'array in formato JSON $\rightarrow$ Mutex Unlock & \texttt{200 OK} \\
-        \texttt{POST} & \texttt{/reservations} & Parsing body URL-Encoded. Ricerca slot libero, scrittura della \textit{struct} e incremento counter. & \texttt{201 Created} \\
-        \texttt{PUT} & \texttt{/reservations/\{id\}} & Ricerca lineare dell'ID corrispondente e aggiornamento dei campi associati. & \texttt{200 OK} \\
-        \texttt{DELETE} & \texttt{/reservations/\{id\}} & Rimozione elemento e traslazione a sinistra (shift) degli elementi per ricompattare l'array. & \texttt{204 No Content} \\
+        \texttt{GET} & \texttt{/reservations} & Mutex Lock $\rightarrow$ Lettura array JSON $\rightarrow$ Mutex Unlock & \texttt{200 OK} \\
+        \texttt{POST} & \texttt{/reservations} & Parsing URL-Encoded. Ricerca slot libero, scrittura struct e incremento counter. & \texttt{201 Created} \\
+        \texttt{PUT} & \texttt{/reservations/\{id\}} & Ricerca lineare dell'ID e aggiornamento dei campi. & \texttt{200 OK} \\
+        \texttt{DELETE} & \texttt{/reservations/\{id\}} & Rimozione elemento e shift a sinistra per ricompattare l'array. & \texttt{204 No Content} \\
         \bottomrule
     \end{tabular}
+    }
     \caption{Mapping delle operazioni REST alle logiche di sistema.}
     \label{tab:rest_architecture}
 \end{table}
 
 \newpage
 \section{Risultati Sperimentali: Load Testing}
-Al fine di certificare il comportamento deterministico dei \textit{Mutex} ed il throughput dell'applicativo, è stata implementata una simulazione locale tramite lo strumento \texttt{Apache Bench (ab)}.
+Per certificare il comportamento dei \textit{Mutex} e misurare il throughput del server, è stata eseguita una simulazione locale tramite \texttt{Apache Bench (ab)}.
 
 L'obiettivo dello Stress Test è di esaurire e mettere sotto carico l'applicativo eseguendo \textbf{10.000 richieste simultanee}, simulando un massimo di 100 utenti concorrenti paralleli che tentano l'interazione REST \texttt{GET} e il parsing crittografico su token Base64 in Authorization.
 
@@ -322,7 +324,7 @@ Il progetto analizzato ha risposto pienamente ai requisiti forniti in ambito acc
 A fronte di uno scenario \textit{Enterprise}, l'architettura si presta a ulteriori implementazioni avanzate:
 \begin{enumerate}
     \item \textbf{Database Persistente}: Sostituire l'uso esclusivo della RAM e dei \textit{Mutex} logici con uno strato di persistenza vero e proprio (ad esempio agganciando driver nativi per \texttt{SQLite3} o \texttt{PostgreSQL}) per prevenire la perdita dei dati alla chiusura del server.
-    \item \textbf{Event-Loop I/O (\texttt{epoll})}: Al posto delle chiamate bloccanti di \texttt{read()}, l'integrazione di interfacce \texttt{epoll} renderebbe i \textit{socket} completamente asincroni, eliminando del tutto l'eventualità che un worker thread rimanga in sospeso a causa di un client "lento".
+    \item \textbf{Event-Loop I/O (\texttt{epoll})}: Invece delle chiamate bloccanti \texttt{read()}, l'uso di \texttt{epoll} renderebbe i socket asincroni, impedendo che un worker thread resti bloccato da un client lento.
     \item \textbf{Sicurezza TLS}: L'aggiunta dello strato OpenSSL garantirebbe il protocollo HTTPS impedendo l'intercettazione testuale in chiaro ed il furto degli Header HTTP.
 \end{enumerate}
 
