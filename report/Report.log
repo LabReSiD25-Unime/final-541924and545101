@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 20:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 21:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1103,7 +1103,7 @@ e
 Package pgfplots notification 'compat/show suggested version=true': you might b
 enefit from \pgfplotsset{compat=1.18} (current compat level: 1.17).
 
-<../assets/logo_unime_orizontale.png, id=63, 828.09375pt x 303.1325pt>
+<../assets/logo_unime_orizontale.png, id=91, 828.09375pt x 303.1325pt>
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
@@ -1194,11 +1194,17 @@ Package microtype Info: Loading generic protrusion settings for font family
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 176.
+e 180.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
  [2{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}]
+File: ../assets/logo_unime_orizontale.png Graphic file (type png)
+<use ../assets/logo_unime_orizontale.png>
+Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
+e 183.
+(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
+ [3]
 LaTeX Font Info:    Trying to load font information for T1+lmss on input line 2
-24.
+31.
  (/usr/share/texmf/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1207,19 +1213,25 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 224.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 231.
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 229.
+e 236.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [3
+ [4
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.229 \newpage
+l.236 \newpage
               ]
+File: ../assets/logo_unime_orizontale.png Graphic file (type png)
+<use ../assets/logo_unime_orizontale.png>
+Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
+e 257.
+(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
+ [5]
 \g__tcobox_out_iow=\write7
 \openout7 = `Report.listing'.
 
@@ -1240,27 +1252,38 @@ Package microtype Info: Character `texttrademark ' is missing
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 263.
+e 281.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
-
-[4]
+ [6]
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 266.
+e 319.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [5]
-File: ../assets/logo_unime_orizontale.png Graphic file (type png)
-<use ../assets/logo_unime_orizontale.png>
-Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 298.
-(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [6{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}
+ [7{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.298 \newpage
+l.319 
+      ]
+File: ../assets/logo_unime_orizontale.png Graphic file (type png)
+<use ../assets/logo_unime_orizontale.png>
+Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
+e 324.
+(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
+ [8]
+File: ../assets/logo_unime_orizontale.png Graphic file (type png)
+<use ../assets/logo_unime_orizontale.png>
+Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
+e 353.
+(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
+ [9
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.353 \newpage
               ]
 \openout7 = `Report.listing'.
 
@@ -1268,31 +1291,38 @@ l.298 \newpage
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 319.
+e 374.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [7{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/d
-vips/lm/lm-mathit.enc}]
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 327.
+ [10{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/
+dvips/lm/lm-mathit.enc}]
 File: ../assets/logo_unime_orizontale.png Graphic file (type png)
 <use ../assets/logo_unime_orizontale.png>
 Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
-e 331.
+e 387.
 (pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
- [8] (./Report.aux)
+ [11]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 395.
+File: ../assets/logo_unime_orizontale.png Graphic file (type png)
+<use ../assets/logo_unime_orizontale.png>
+Package pdftex.def Info: ../assets/logo_unime_orizontale.png  used on input lin
+e 399.
+(pdftex.def)             Requested size: 99.58464pt x 36.45296pt.
+ [12]
+(./Report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `Report.out' has not changed.
-(rerunfilecheck)             Checksum: 03FCF6732232FF9818D3E145E4D3428A;2905.
+(rerunfilecheck)             Checksum: 87D1B192E877F20879E09793557A3EDD;5123.
  ) 
 Here is how much of TeX's memory you used:
- 41252 strings out of 476171
- 943229 string characters out of 5795119
- 1968975 words of memory out of 5000000
- 62426 multiletter control sequences out of 15000+600000
- 625205 words of font info for 138 fonts, out of 8000000 for 9000
+ 41318 strings out of 476171
+ 944019 string characters out of 5795119
+ 1969975 words of memory out of 5000000
+ 62436 multiletter control sequences out of 15000+600000
+ 627377 words of font info for 160 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,17n,93p,1003b,1947s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/ty
@@ -1304,10 +1334,10 @@ i12.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/texmf/
 fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10
 .pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts
 /type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
-Output written on Report.pdf (9 pages, 469097 bytes).
+Output written on Report.pdf (13 pages, 485550 bytes).
 PDF statistics:
- 254 PDF objects out of 1000 (max. 8388607)
- 207 compressed objects within 3 object streams
- 56 named destinations out of 1000 (max. 500000)
- 42114 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 309 PDF objects out of 1000 (max. 8388607)
+ 258 compressed objects within 3 object streams
+ 68 named destinations out of 1000 (max. 500000)
+ 42170 words of extra memory for PDF output out of 42996 (max. 10000000)
 

@@ -173,6 +173,13 @@ Le specifiche e gli obiettivi tecnici raggiunti includono:
     \item \textbf{Validazione delle Prestazioni}: Esecuzione di \textit{load testing} al fine di misurare il \textit{throughput} massimo e verificare la stabilità del sistema sotto carico.
 \end{itemize}
 
+\subsection{Il Livello di Trasporto e il Ciclo di Vita del Socket TCP}
+Prima di esaminare la concorrenza, è imperativo definire l'interazione del server con il sottosistema di rete del kernel Linux/UNIX. Il protocollo HTTP si appoggia tipicamente sul Transmission Control Protocol (TCP), un protocollo orientato alla connessione che garantisce l'affidabilità e l'ordine dei pacchetti inviati. L'interfaccia standard per l'accesso al protocollo TCP è fornita dalle API Socket di Berkeley.
+
+La genesi di un server HTTP in C inizia con la creazione dell'endpoint di comunicazione tramite la funzione \texttt{socket()}, che istanzia un socket nel dominio IPv4 o IPv6. Successivamente, la funzione \texttt{bind()} associa questo socket a un indirizzo IP specifico e a una porta logica (ad esempio, la porta 8080), inserendo la configurazione in una struttura \texttt{sockaddr\_in}. Una volta ancorato, il socket viene commutato in modalità passiva tramite la chiamata \texttt{listen()}, che informa il kernel della volontà del server di ricevere tentativi di handshake a tre vie (\textit{Three-way Handshake}) da parte dei client, configurando al contempo la dimensione della coda dei collegamenti in sospeso (\textit{backlog}).
+
+Il momento critico dell'interazione avviene con l'invocazione di \texttt{accept()}. Questa funzione, di default bloccante, mette in sospensione il thread chiamante fino a quando un client non completa con successo la connessione. Al ritorno, \texttt{accept()} non utilizza il socket originale per la comunicazione, ma genera e restituisce un nuovo descrittore di file (\textit{File Descriptor}, FD), un intero non negativo che rappresenta unicamente il tunnel dati dedicato a quello specifico client. Il socket in ascolto originale rimane intatto e pronto ad accogliere ulteriori connessioni. È proprio la gestione di questi innumerevoli FD generati in rapida successione a rendere necessaria un'architettura multithread avanzata.
+
 \newpage
 \section{Architettura del Sistema}
 Per soddisfare il requisito della gestione simultanea di client multipli limitando al contempo il consumo di risorse hardware, si è optato per il \textbf{Pattern a Thread Pool}. Questo approccio pre-alloca all'avvio del server un numero fisso di thread lavoratori (\textit{Worker Threads}) che permangono in attesa di richieste, limitando i cambi di contesto (context-switching) del kernel rispetto all'approccio classico con \texttt{fork()} \textit{per-connection}.
@@ -230,15 +237,23 @@ Il sistema è logicamente suddiviso in tre strati principali:
 \section{Sincronizzazione e Gestione della Memoria}
 Il problema principale riscontrato nei server concorrenti è legato alla manipolazione parallela di risorse condivise (in questo caso, la memoria interna in cui sono salvate le prenotazioni e la coda dei task). Per risolvere questi problemi, sono state impiegate due tipologie di lock forniti dalla libreria \texttt{pthread}: Mutex e Semafori.
 
-\subsection{Pattern Produttore-Consumatore con Semafori}
-Per gestire l'inserimento e l'estrazione dalla \texttt{Job Queue}, è stato applicato il classico paradigma \textit{Producer-Consumer}.
+\subsection{Controllo del Flusso Esecutivo tramite Semafori}
+Sebbene i Mutex prevengano la corruzione della memoria, essi non forniscono un meccanismo nativo per segnalare i cambiamenti di stato. Se l'architettura dipendesse esclusivamente dal Mutex, i Worker Thread sarebbero costretti a implementare un meccanismo di \textit{busy-waiting} (polling attivo). Tale pratica consumerebbe inutilmente interi core del processore.
+
+Per implementare una notifica degli eventi (\textit{event notification}) efficiente, l'architettura integra l'astrazione dei semafori introdotti da Dijkstra (\texttt{<semaphore.h>}). Si utilizza in particolare un semaforo di conteggio (\texttt{sem\_t}), che riflette esattamente la quantità di job pendenti all'interno della Job Queue.
+
+Le operazioni sui semafori governano i cicli di sospensione e risveglio (\textit{sleep/wakeup}) dei thread:
 \begin{itemize}
-    \item Il dispatcher agisce da \textbf{Produttore}. Creato un job, incrementa il conteggio del semaforo con \texttt{sem\_post(\&pool->queue\_sem)}.
-    \item I \textit{Worker} sono i \textbf{Consumatori}. All'avvio chiamano \texttt{sem\_wait(\&pool->queue\_sem)}. A coda vuota, il kernel blocca il thread in stato di \textit{sleep}, evitando di consumare cicli di CPU (\textit{busy-waiting}).
+    \item \textbf{Azione del Consumatore (Pull Task)}: I Worker Thread invocano \texttt{sem\_wait()}. Se la coda è vuota, il sistema operativo estromette il thread dallo scheduling attivo, ponendolo in uno stato dormiente (\textit{blocked state}).
+    \item \textbf{Azione del Produttore (Push Task)}: Inserito il file descriptor, il Main Listener invoca \texttt{sem\_post()}. Questa istruzione incrementa il contatore e invia un segnale al dispatcher del kernel affinché un Worker dormiente venga risvegliato e reinserito nella coda dei processi pronti (\textit{ready queue}).
 \end{itemize}
 
-\subsection{Mutua Esclusione sui Dati delle Prenotazioni}
-Mentre il dispatcher e i worker comunicano tramite semafori per la distribuzione del carico di rete, l'applicativo utilizza un \textbf{Mutex} (\textit{Mutual Exclusion}) all'interno del \texttt{Resource Manager} per prevenire letture e scritture parziali e le corruzioni della memoria durante il parallelismo.
+L'utilizzo congiunto di un Semaforo per la segnalazione di disponibilità e di un Mutex per l'accesso esclusivo rappresenta lo standard aureo per l'implementazione robusta del pattern Thread Pool.
+
+\subsection{Mutual Exclusion e Sezioni Critiche}
+Per garantire la coerenza, lo standard POSIX fornisce il tipo di dato \texttt{pthread\_mutex\_t}, un costrutto di sincronizzazione basato sull'esclusione reciproca (\textit{Mutual Exclusion}). Un Mutex agisce come un blocco che può essere detenuto da un solo thread alla volta. Quando il Main Listener desidera inserire un nuovo task, deve preventivamente invocare \texttt{pthread\_mutex\_lock()}. Se il lock è libero, il Listener entra nella cosiddetta sezione critica, modifica in totale sicurezza la coda, e successivamente invoca \texttt{pthread\_mutex\_unlock()} per cedere il controllo. 
+
+È fondamentale che il codice eseguito all'interno della sezione critica sia ridotto al minimo assoluto. L'applicativo utilizza lo stesso principio all'interno del \texttt{Resource Manager} per prevenire letture e scritture parziali. Eseguire operazioni di input/output complesse mantenendo un lock attivo degraderebbe severamente le prestazioni, trasformando il parallelismo del sistema in un'esecuzione puramente sequenziale.
 
 \begin{ccode}[Esempio di sincronizzazione CRUD]
 int rm_create(resource_manager_t* rm, const char* room, ...) {
@@ -295,6 +310,46 @@ La seguente tabella mappa le direttive HTTP sull'array in memoria:
     \label{tab:rest_architecture}
 \end{table}
 
+\subsection{Analisi Tecnica delle Operazioni nel Resource Manager}
+La tabella evidenzia problematiche ingegneristiche fondamentali legate alla concorrenza dei dati. Poiché i Worker Thread operano in parallelo sul medesimo array dinamico globale, le collisioni di accesso (\textit{Data Races}) si presentano costantemente.
+
+\begin{sloppypar}
+\textbf{Ottimizzazione tramite Lock a Grana Fine (Fine-Grained Locking)}:
+L'adozione di un unico Mutex globale per tutto il database in memoria penalizza il parallelismo, forzando le transazioni REST ad accodarsi artificialmente. Un'evoluzione notevole di questa architettura risiede nella sostituzione del \texttt{pthread\_mutex\_t} con un \texttt{pthread\_rwlock\_t} (Read-Write Lock). Le architetture REST mostrano intrinsecamente un rapporto sbilanciato a favore delle letture rispetto alle scritture. Un lock di tipo RW consente a infiniti Worker Thread di invocare blocchi in lettura (\texttt{pthread\_rwlock\_rdlock()}), processando parallelamente centinaia di richieste \texttt{GET}. Nel momento in cui un pacchetto \texttt{POST} o \texttt{DELETE} richiede l'accesso al dato, il relativo thread chiede il lock in scrittura (\texttt{pthread\_rwlock\_wrlock()}); il sistema attenderà il completamento delle letture in corso e garantirà accesso esclusivo alla mutazione della memoria.
+
+\textbf{Integrità della Memoria Dinamica e De-frammentazione (DELETE)}:
+L'operazione di DELETE impone considerazioni critiche nei linguaggi non provvisti di Garbage Collector automatico. Lasciare un campo azzerato all'interno di un vettore genera rapida frammentazione. I programmatori ricorrono alla transizione di memoria con shift a sinistra, sfruttando routine di libreria altamente ottimizzate a livello assembly come \texttt{memmove()} (preferita a \texttt{memcpy()} in quanto garantisce la sicurezza in caso di sovrapposizione delle aree di memoria).
+\end{sloppypar}
+
+\newpage
+\subsection{Implementazione e Tassonomia dei Codici di Stato HTTP}
+In un server custom scritto in C, il Worker Thread è incaricato di costruire letteralmente byte per byte la stringa di risposta HTTP, innestando nella prima linea il codice appropriato al termine delle logiche di lock sul database. 
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}llp{8cm}l@{}}
+        \toprule
+        \textbf{Categoria} & \textbf{Codice} & \textbf{Scatenante nel Backend C e Semantica} & \textbf{Body HTTP} \\
+        \midrule
+        \textbf{Successo} & \texttt{200 OK} & Lettura o Aggiornamento completato con successo. & Body JSON (es. \texttt{\{"id": 1\}}) \\
+        & \texttt{201 Created} & Spazio allocato e copia risorsa andata a buon fine. & Body JSON + \texttt{Location:} \\
+        & \texttt{204 No Content} & Memory shift terminato e indice rimosso dal dominio. & Assente \\
+        \midrule
+        \textbf{Errori Client} & \texttt{400 Bad Request} & La decodifica C (\texttt{strtok}) fallisce (Payload errato). & Dettagli errore JSON \\
+        & \texttt{404 Not Found} & Nessun ID corrisponde alla ricerca nell'array. & Messaggio d'errore \\
+        & \texttt{409 Conflict} & Violazione semantica (es. record duplicato). & Motivo del conflitto \\
+        \midrule
+        \textbf{Errori Server} & \texttt{500 Internal Error} & \texttt{malloc()} fallisce o crittografia ritorna \texttt{NULL}. & Dettagli generici \\
+        & \texttt{503 Unavailable} & Job Queue piena, i Worker Thread sono saturi. & Header \texttt{Retry-After:} \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Classificazione e Dinamiche dei Codici di Stato nel Backend C.}
+    \label{tab:status_codes}
+\end{table}
+
 \newpage
 \section{Risultati Sperimentali: Load Testing}
 Per certificare il comportamento dei \textit{Mutex} e misurare il throughput del server, è stata eseguita una simulazione locale tramite \texttt{Apache Bench (ab)}.
@@ -315,6 +370,19 @@ I risultati empirici registrati confermano la stabilità ingegneristica dell'inf
     \item \textbf{Throughput Misurato:} $\sim 33.229$ \textit{Requests Per Second} (Req/Sec).
     \item \textbf{Latenza Mediana:} Il tempo medio di connessione, parsing ed erogazione si è assestato intorno ai $3.0$ millisecondi, valore che suggerisce l'assenza di ingorghi all'interno dello \textit{scheduler} POSIX.
 \end{itemize}
+
+\newpage
+\section{Sicurezza, Gestione Avanzata e Mitigazione Vulnerabilità}
+Il linguaggio C, se da un lato conferisce enormi privilegi per la rapidità d'esecuzione, dall'altro espone l'architetto a innumerevoli insidie legate ai difetti in fase di progettazione. 
+
+\subsection{Exhaustion dei Descrittori (Socket Leaks)}
+I file descriptor restituiti dalle primitive POSIX sono rappresentazioni finite gestite dalla tabella di rete locale al kernel Linux. Quando un Worker Thread termina il proprio flusso logico, esso è tassativamente obbligato ad apporre la terminazione finale richiamando il metodo \texttt{close(fd)}. Fallire nel tracciare correttamente la catena d'impiego genererà accumuli pendenti non riallocabili noti come \textbf{Socket Leaks}. In tale evenienza fatale, il processo backend raggiungerà celermente la soglia rigida imposta dal sistema (\texttt{ulimit}), risultando incapace di processare alcuna chiamata \texttt{accept()} addizionale.
+
+\subsection{Difesa da Payload Malevoli (Buffer Overflows)}
+La fase di parsing dell'header HTTP è un collo di bottiglia strutturale esposto. Per mitigare le iniezioni di Buffer Overflow, un solido Worker Thread alloca porzioni deterministiche in heap predefinite e adotta varianti sicure delle primitive dell'ambiente C (es. sostituendo le versioni standard con \texttt{snprintf()} o \texttt{strncpy()}). Quando viene riscontrato l'impiego di una dimensione spropositata, la reazione da manuale corrisponde all'invio dell'intestazione di diagnostica esplicita \texttt{413 Payload Too Large} e la distruzione unilaterale del socket corrotto per proteggere le risorse host.
+
+\subsection{La Dinamica dell'Interruzione SIGPIPE}
+Un caso marginale tipico dello strato Socket POSIX si manifesta nei network fluttuanti a scarsa affidabilità. L'invocazione di \texttt{send()} contro socket che il client recettivo aveva bruscamente ammutinato induce il kernel UNIX a lanciare l'intollerante segnale \texttt{SIGPIPE} contro il processo reo. In C, tale segnalazione causerà l'interruzione silente ed inappellabile del server interno per intero. È perciò una \textit{conditio sine qua non} mascherare l'intercetto, applicando maschere difensive (flag globale \texttt{MSG\_NOSIGNAL}) affinché la primitiva trasmetta semplicemente un indice identificativo dell'errore (il \texttt{return -1}) consentendo alle architetture multithreadate di processare il tracciato delle eccezioni con fluidità, senza arrestare il listener di rete globale.
 
 \newpage
 \section{Conclusioni e Sviluppi Futuri}

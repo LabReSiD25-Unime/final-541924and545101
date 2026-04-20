@@ -175,7 +175,30 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
     \end{block}
 \end{frame}
 
-\begin{frame}{6. Analisi e Load Testing}
+\begin{frame}{6. Ottimizzazioni Architetturali}
+    \begin{block}{Lock a Grana Fine (Fine-Grained Locking)}
+        Nelle architetture REST le letture superano enormemente le scritture.
+        Sostituire il \texttt{pthread\_mutex\_t} con un \textbf{Read-Write Lock} (\texttt{pthread\_rwlock\_t}) consente a infiniti Worker Thread di leggere simultaneamente lo stato, bloccando l'accesso in mutua esclusione solo durante le scritture (\texttt{POST}/\texttt{DELETE}).
+    \end{block}
+    
+    \vspace{0.3cm}
+    
+    \begin{block}{De-frammentazione della Memoria Dinamica}
+        Poiché il C è sprovvisto di Garbage Collector, la rimozione logica di una prenotazione (\texttt{DELETE}) espone al rischio di frammentazione del vettore.
+        L'implementazione impiega uno \textbf{shift a sinistra} tramite \texttt{memmove()} all'interno dell'area di memoria esclusiva, garantendo la compattezza continua dell'array dinamico.
+    \end{block}
+\end{frame}
+
+\begin{frame}{7. Sicurezza e Gestione Vulnerabilità}
+    \textbf{Mitigazione delle criticità intrinseche in ambiente C/POSIX:}
+    \begin{itemize}
+        \item \textbf{Socket Leaks:} La tracciatura fallace dei \textit{File Descriptor} sfocia nell'esaurimento delle risorse limite di sistema (\texttt{ulimit}). Il server impone la dismissione sicura \texttt{close(fd)} per ogni ciclo di Worker terminante.
+        \item \textbf{Buffer Overflows:} I Worker utilizzano varianti sicure con limiti massimi (\texttt{snprintf()}, \texttt{strncpy()}) per evitare iniezioni e corruzione di memoria, rifiutando pacchetti anomali con \texttt{413 Payload Too Large}.
+        \item \textbf{Interruzione SIGPIPE:} La chiusura brutale di un socket da parte del client durante l'erogazione causa la fatale disconnessione del demone tramite \texttt{SIGPIPE}. L'impiego del flag POSIX \texttt{MSG\_NOSIGNAL} previene l'interruzione propagando un errore catturabile dai thread.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{8. Analisi e Load Testing}
     Il progetto è stato collaudato sfruttando lo strumento standard \textbf{Apache Bench (ab)}.
     La simulazione ha previsto: \textbf{10.000 richieste totali} con un livello di concorrenza di \textbf{100 thread paralleli}.
     
@@ -200,7 +223,7 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
     \end{columns}
 \end{frame}
 
-\begin{frame}{7. Conclusioni e Sviluppi Futuri}
+\begin{frame}{9. Conclusioni e Sviluppi Futuri}
     L'implementazione in linguaggio C di un Thread Pool associato a socket BSD si è dimostrata una soluzione \textit{memory-safe} ad altissime prestazioni per la costruzione di architetture HTTP concorrenti.
 
     \vspace{0.4cm}

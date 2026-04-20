@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 20:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 21:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1111,11 +1111,15 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <7> not available
 
 ] [7
 
+] [8
+
+] [9
+
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-mathit.enc}]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 217.
- [8
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 240.
+ [10
 
 ]
 \tf@nav=\write6
@@ -1127,7 +1131,8 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 \tf@snm=\write8
 \openout8 = `Presentation.snm'.
 
- (./Presentation.aux)
+
+(./Presentation.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -1136,29 +1141,25 @@ Package rerunfilecheck Info: File `Presentation.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 27763 strings out of 476171
- 542356 string characters out of 5795119
+ 27780 strings out of 476171
+ 542921 string characters out of 5795119
  2106975 words of memory out of 5000000
- 49198 multiletter control sequences out of 15000+600000
+ 49212 multiletter control sequences out of 15000+600000
  605713 words of font info for 71 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  101i,15n,107p,408b,1624s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{Navigation9} has been referenced but does not exist
-, replaced by a fixed one
-
-</usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type
-1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss12.pfb></usr
-/share/texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/publ
-ic/lm/lmss9.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/shar
-e/texmf/fonts/type1/public/lm/lmsso10.pfb></usr/share/texmf/fonts/type1/public/
-lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/te
-xmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lm
-tt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Presentation.pdf (8 pages, 277613 bytes).
+</usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/ty
+pe1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss12.pfb></u
+sr/share/texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/pu
+blic/lm/lmss9.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/sh
+are/texmf/fonts/type1/public/lm/lmsso10.pfb></usr/share/texmf/fonts/type1/publi
+c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/
+texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/
+lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
+Output written on Presentation.pdf (10 pages, 290396 bytes).
 PDF statistics:
- 359 PDF objects out of 1000 (max. 8388607)
- 279 compressed objects within 3 object streams
- 18 named destinations out of 1000 (max. 500000)
- 199 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 438 PDF objects out of 1000 (max. 8388607)
+ 341 compressed objects within 4 object streams
+ 21 named destinations out of 1000 (max. 500000)
+ 271 words of extra memory for PDF output out of 10000 (max. 10000000)
 
