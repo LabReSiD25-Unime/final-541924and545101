@@ -51,7 +51,7 @@
 
 \begin{frame}{2. Architettura a Thread Pool}
     \centering
-    \resizebox{0.9\textwidth}{!}{
+    \resizebox{0.7\textwidth}{!}{
     \begin{tikzpicture}[
         node distance=1.5cm and 1.5cm,
         box/.style={draw, rounded corners, minimum width=2.5cm, minimum height=1cm, align=center, fill=blue!10, font=\sffamily},
@@ -83,6 +83,13 @@
     
     \end{tikzpicture}
     }
+\end{frame}
+
+\begin{frame}{Evidenza: Handshake TCP}
+    \centering
+    \includegraphics[width=0.85\textwidth, trim=0 80 0 70, clip]{../assets/wireshark_handshake.png}
+    \\[0.2cm]
+    {\scriptsize \textbf{Figura:} Tracciato Wireshark del Three-Way Handshake TCP.}
 \end{frame}
 
 \begin{frame}[fragile]{3. Il Pattern Produttore-Consumatore}
@@ -151,12 +158,9 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
 \end{frame}
 
 \begin{frame}{5. Specifiche API REST (CRUD)}
-    L'applicativo funge da Web Server backend e riceve/invia stringhe formattate nativamente in formato \textbf{JSON}.
-    
-    \vspace{0.5cm}
     \centering
     \renewcommand{\arraystretch}{1.3}
-    \resizebox{0.95\textwidth}{!}{
+    \resizebox{1.0\textwidth}{!}{
     \begin{tabular}{@{}lllc@{}}
         \toprule
         \textbf{Metodo} & \textbf{Endpoint} & \textbf{Azione Interna} & \textbf{Status Code} \\
@@ -171,8 +175,25 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
     
     \vspace{0.4cm}
     \begin{block}{Autenticazione}
-        Le rotte di inserimento e modifica richiedono un header \texttt{Authorization: Basic} che viene confrontato nativamente in C con il token in Base64 prima di rilasciare l'accesso.
+        Le rotte sensibili richiedono l'header \texttt{Authorization: Basic} (token Base64).
     \end{block}
+\end{frame}
+
+\begin{frame}{Evidenza: Autenticazione e JSON}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth, trim=0 80 0 70, clip]{../assets/wireshark_post.png}
+            \\[0.1cm]
+            {\tiny POST Request e Basic Auth}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width=1.0\textwidth, trim=0 80 0 70, clip]{../assets/wireshark_get_json.png}
+            \\[0.1cm]
+            {\tiny Risposta 200 OK (JSON)}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{6. Ottimizzazioni Architetturali}
@@ -192,10 +213,14 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
 \begin{frame}{7. Sicurezza e Gestione Vulnerabilità}
     \textbf{Mitigazione delle criticità intrinseche in ambiente C/POSIX:}
     \begin{itemize}
-        \item \textbf{Socket Leaks:} La tracciatura fallace dei \textit{File Descriptor} sfocia nell'esaurimento delle risorse limite di sistema (\texttt{ulimit}). Il server impone la dismissione sicura \texttt{close(fd)} per ogni ciclo di Worker terminante.
-        \item \textbf{Buffer Overflows:} I Worker utilizzano varianti sicure con limiti massimi (\texttt{snprintf()}, \texttt{strncpy()}) per evitare iniezioni e corruzione di memoria, rifiutando pacchetti anomali con \texttt{413 Payload Too Large}.
-        \item \textbf{Interruzione SIGPIPE:} La chiusura brutale di un socket da parte del client durante l'erogazione causa la fatale disconnessione del demone tramite \texttt{SIGPIPE}. L'impiego del flag POSIX \texttt{MSG\_NOSIGNAL} previene l'interruzione propagando un errore catturabile dai thread.
+        \item \textbf{Socket Leaks:} Dismissione sicura \texttt{close(fd)}.
+        \item \textbf{Buffer Overflows:} Varianti sicure, errore \texttt{413}.
+        \item \textbf{Interruzione SIGPIPE:} Flag \texttt{MSG\_NOSIGNAL}.
     \end{itemize}
+    \centering
+    \includegraphics[width=0.75\textwidth, trim=0 80 0 70, clip]{../assets/wireshark_413.png}
+    \\[0.1cm]
+    {\scriptsize \textbf{Figura:} Validazione Errore 413 Payload Too Large}
 \end{frame}
 
 \begin{frame}{8. Analisi e Load Testing}

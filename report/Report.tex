@@ -180,6 +180,13 @@ La genesi di un server HTTP in C inizia con la creazione dell'endpoint di comuni
 
 Il momento critico dell'interazione avviene con l'invocazione di \texttt{accept()}. Questa funzione, di default bloccante, mette in sospensione il thread chiamante fino a quando un client non completa con successo la connessione. Al ritorno, \texttt{accept()} non utilizza il socket originale per la comunicazione, ma genera e restituisce un nuovo descrittore di file (\textit{File Descriptor}, FD), un intero non negativo che rappresenta unicamente il tunnel dati dedicato a quello specifico client. Il socket in ascolto originale rimane intatto e pronto ad accogliere ulteriori connessioni. È proprio la gestione di questi innumerevoli FD generati in rapida successione a rendere necessaria un'architettura multithread avanzata.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth, trim=0 40 0 40, clip]{../assets/wireshark_handshake.png}
+    \caption{Tracciato Wireshark: Handshake a tre vie (SYN, SYN-ACK, ACK) su interfaccia Loopback.}
+    \label{fig:wireshark_handshake}
+\end{figure}
+
 \newpage
 \section{Architettura del Sistema}
 Per soddisfare il requisito della gestione simultanea di client multipli limitando al contempo il consumo di risorse hardware, si è optato per il \textbf{Pattern a Thread Pool}. Questo approccio pre-alloca all'avvio del server un numero fisso di thread lavoratori (\textit{Worker Threads}) che permangono in attesa di richieste, limitando i cambi di contesto (context-switching) del kernel rispetto all'approccio classico con \texttt{fork()} \textit{per-connection}.
@@ -286,6 +293,20 @@ Le stringhe inviate tramite socket non sono formattate a monte, consistono sempl
 \subsection{Basic Authentication}
 Per le rotte sensibili del sistema (es. \texttt{POST}, \texttt{PUT}, \texttt{DELETE}), è richiesto l'invio dell'header \texttt{Authorization}. Il server applica un sistema di validazione basato su crittografia Base64, confrontando nativamente il token in formato Base64 per accertarsi che le credenziali corrispondano alla combinazione memorizzata prima di permettere il proseguimento dell'esecuzione, mitigando i tentativi d'intrusione.
 
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth, trim=0 20 0 20, clip]{../assets/wireshark_unauthorized.png}
+        \caption{Risposta 401 Unauthorized.}
+    \end{minipage}\hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=1.0\textwidth, trim=0 20 0 20, clip]{../assets/wireshark_post.png}
+        \caption{Dettaglio Basic Auth e parametri POST.}
+    \end{minipage}
+\end{figure}
+
 \subsection{Interfaccia CRUD (REST API)}
 L'interazione con il server avviene seguendo i principi architetturali REST. I dati ritornati dal sistema sono formattati in JSON, costrutto compatibile con i principali linguaggi frontend moderni. 
 
@@ -309,6 +330,13 @@ La seguente tabella mappa le direttive HTTP sull'array in memoria:
     \caption{Mapping delle operazioni REST alle logiche di sistema.}
     \label{tab:rest_architecture}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth, trim=0 40 0 40, clip]{../assets/wireshark_get_json.png}
+    \caption{Visualizzazione della risposta JSON (200 OK) nell'inspector di Wireshark.}
+    \label{fig:wireshark_json}
+\end{figure}
 
 \subsection{Analisi Tecnica delle Operazioni nel Resource Manager}
 La tabella evidenzia problematiche ingegneristiche fondamentali legate alla concorrenza dei dati. Poiché i Worker Thread operano in parallelo sul medesimo array dinamico globale, le collisioni di accesso (\textit{Data Races}) si presentano costantemente.
@@ -380,6 +408,13 @@ I file descriptor restituiti dalle primitive POSIX sono rappresentazioni finite 
 
 \subsection{Difesa da Payload Malevoli (Buffer Overflows)}
 La fase di parsing dell'header HTTP è un collo di bottiglia strutturale esposto. Per mitigare le iniezioni di Buffer Overflow, un solido Worker Thread alloca porzioni deterministiche in heap predefinite e adotta varianti sicure delle primitive dell'ambiente C (es. sostituendo le versioni standard con \texttt{snprintf()} o \texttt{strncpy()}). Quando viene riscontrato l'impiego di una dimensione spropositata, la reazione da manuale corrisponde all'invio dell'intestazione di diagnostica esplicita \texttt{413 Payload Too Large} e la distruzione unilaterale del socket corrotto per proteggere le risorse host.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth, trim=0 40 0 40, clip]{../assets/wireshark_413.png}
+    \caption{Validazione della sicurezza: il server rifiuta un payload eccessivo con errore 413.}
+    \label{fig:wireshark_413}
+\end{figure}
 
 \subsection{La Dinamica dell'Interruzione SIGPIPE}
 Un caso marginale tipico dello strato Socket POSIX si manifesta nei network fluttuanti a scarsa affidabilità. L'invocazione di \texttt{send()} contro socket che il client recettivo aveva bruscamente ammutinato induce il kernel UNIX a lanciare l'intollerante segnale \texttt{SIGPIPE} contro il processo reo. In C, tale segnalazione causerà l'interruzione silente ed inappellabile del server interno per intero. È perciò una \textit{conditio sine qua non} mascherare l'intercetto, applicando maschere difensive (flag globale \texttt{MSG\_NOSIGNAL}) affinché la primitiva trasmetta semplicemente un indice identificativo dell'errore (il \texttt{return -1}) consentendo alle architetture multithreadate di processare il tracciato delle eccezioni con fluidità, senza arrestare il listener di rete globale.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  20 APR 2026 21:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.3.30)  27 APR 2026 11:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1048,13 +1048,21 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ] [3
 
 ]
+<../assets/wireshark_handshake.png, id=136, 1927.2pt x 1084.05pt>
+File: ../assets/wireshark_handshake.png Graphic file (type png)
+<use ../assets/wireshark_handshake.png>
+Package pdftex.def Info: ../assets/wireshark_handshake.png  used on input line 
+93.
+(pdftex.def)             Requested size: 369.96008pt x 179.1876pt.
+ [4
+
+ <../assets/wireshark_handshake.png>]
 \openout4 = `Presentation.vrb'.
 
  (./Presentation.vrb
 LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
 20.
-
-(/usr/share/texmf/tex/latex/lm/ot1lmss.fd
+ (/usr/share/texmf/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
@@ -1099,27 +1107,51 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
 (Font)              Font shape `T1/lmss/m/sl' tried instead on input line 20.
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <7> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 25.
-) [4
+) [5
 
 ]
 \openout4 = `Presentation.vrb'.
 
 
-(./Presentation.vrb) [5
-
-] [6
+(./Presentation.vrb) [6
 
 ] [7
 
-] [8
+]
+<../assets/wireshark_post.png, id=266, 1927.2pt x 1084.05pt>
+File: ../assets/wireshark_post.png Graphic file (type png)
+<use ../assets/wireshark_post.png>
+Package pdftex.def Info: ../assets/wireshark_post.png  used on input line 197.
+(pdftex.def)             Requested size: 217.62202pt x 105.40446pt.
+<../assets/wireshark_get_json.png, id=268, 1927.2pt x 1084.05pt>
+File: ../assets/wireshark_get_json.png Graphic file (type png)
+<use ../assets/wireshark_get_json.png>
+Package pdftex.def Info: ../assets/wireshark_get_json.png  used on input line 1
+97.
+(pdftex.def)             Requested size: 217.62202pt x 105.40446pt.
+ [8
 
-] [9
+ <../assets/wireshark_post.png> <../assets/wireshark_get_json.png>] [9
+
+]
+<../assets/wireshark_413.png, id=353, 1927.2pt x 1084.05pt>
+File: ../assets/wireshark_413.png Graphic file (type png)
+<use ../assets/wireshark_413.png>
+Package pdftex.def Info: ../assets/wireshark_413.png  used on input line 224.
+(pdftex.def)             Requested size: 326.43303pt x 158.1067pt.
+
+Overfull \vbox (11.57687pt too high) detected at line 224
+ []
+
+[10
+
+ <../assets/wireshark_413.png>] [11
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-mathit.enc}]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 240.
- [10
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 265.
+ [12
 
 ]
 \tf@nav=\write6
@@ -1141,11 +1173,11 @@ Package rerunfilecheck Info: File `Presentation.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 27780 strings out of 476171
- 542921 string characters out of 5795119
- 2106975 words of memory out of 5000000
- 49212 multiletter control sequences out of 15000+600000
- 605713 words of font info for 71 fonts, out of 8000000 for 9000
+ 27823 strings out of 476171
+ 544296 string characters out of 5795119
+ 2107975 words of memory out of 5000000
+ 49251 multiletter control sequences out of 15000+600000
+ 608481 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  101i,15n,107p,408b,1624s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/ty
@@ -1156,10 +1188,10 @@ are/texmf/fonts/type1/public/lm/lmsso10.pfb></usr/share/texmf/fonts/type1/publi
 c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/
 texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb>
-Output written on Presentation.pdf (10 pages, 290396 bytes).
+Output written on Presentation.pdf (12 pages, 1921958 bytes).
 PDF statistics:
- 438 PDF objects out of 1000 (max. 8388607)
- 341 compressed objects within 4 object streams
- 21 named destinations out of 1000 (max. 500000)
- 271 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 513 PDF objects out of 1000 (max. 8388607)
+ 399 compressed objects within 4 object streams
+ 25 named destinations out of 1000 (max. 500000)
+ 321 words of extra memory for PDF output out of 10000 (max. 10000000)
 

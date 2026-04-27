@@ -9,13 +9,13 @@
 \contentsline {section}{\numberline {4}Livello Applicativo: Parsing HTTP ed API REST}{7}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Basic Authentication}{7}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Interfaccia CRUD (REST API)}{7}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Analisi Tecnica delle Operazioni nel Resource Manager}{7}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Implementazione e Tassonomia dei Codici di Stato HTTP}{9}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Risultati Sperimentali: Load Testing}{10}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Performance Metrics}{10}{subsection.5.1}%
-\contentsline {section}{\numberline {6}Sicurezza, Gestione Avanzata e Mitigazione Vulnerabilità}{11}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Exhaustion dei Descrittori (Socket Leaks)}{11}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Difesa da Payload Malevoli (Buffer Overflows)}{11}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}La Dinamica dell'Interruzione SIGPIPE}{11}{subsection.6.3}%
-\contentsline {section}{\numberline {7}Conclusioni e Sviluppi Futuri}{12}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Potenziali Ottimizzazioni}{12}{subsection.7.1}%
+\contentsline {subsection}{\numberline {4.3}Analisi Tecnica delle Operazioni nel Resource Manager}{8}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Implementazione e Tassonomia dei Codici di Stato HTTP}{10}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Risultati Sperimentali: Load Testing}{11}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Performance Metrics}{11}{subsection.5.1}%
+\contentsline {section}{\numberline {6}Sicurezza, Gestione Avanzata e Mitigazione Vulnerabilità}{12}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Exhaustion dei Descrittori (Socket Leaks)}{12}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Difesa da Payload Malevoli (Buffer Overflows)}{12}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}La Dinamica dell'Interruzione SIGPIPE}{13}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Conclusioni e Sviluppi Futuri}{14}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Potenziali Ottimizzazioni}{14}{subsection.7.1}%
