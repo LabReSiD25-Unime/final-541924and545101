@@ -284,7 +284,7 @@ Questo approccio granulare garantisce \textbf{Thread Safety} al 100\% per l'arra
 Le stringhe inviate tramite socket non sono formattate a monte, consistono semplicemente in un buffer sequenziale di byte. Il file \texttt{http\_parser.c} funge da \textit{scanner} lessicale per decodificare le direttive del client analizzando i ritorni a capo standard di Windows/DOS (\texttt{\textbackslash r\textbackslash n}).
 
 \subsection{Basic Authentication}
-Per le rotte sensibili del sistema (es. \texttt{POST}, \texttt{PUT}, \texttt{DELETE}), è richiesto l'invio dell'header \texttt{Authorization}. Il server applica un sistema di validazione basato su crittografia Base64, confrontando nativamente la stringa decodificata per accertarsi che le credenziali (es. \texttt{admin:password}) corrispondano al token memorizzato prima di permettere il proseguimento dell'esecuzione, mitigando i tentativi d'intrusione.
+Per le rotte sensibili del sistema (es. \texttt{POST}, \texttt{PUT}, \texttt{DELETE}), è richiesto l'invio dell'header \texttt{Authorization}. Il server applica un sistema di validazione basato su crittografia Base64, confrontando nativamente il token in formato Base64 per accertarsi che le credenziali corrispondano alla combinazione memorizzata prima di permettere il proseguimento dell'esecuzione, mitigando i tentativi d'intrusione.
 
 \subsection{Interfaccia CRUD (REST API)}
 L'interazione con il server avviene seguendo i principi architetturali REST. I dati ritornati dal sistema sono formattati in JSON, costrutto compatibile con i principali linguaggi frontend moderni. 
@@ -314,11 +314,11 @@ La seguente tabella mappa le direttive HTTP sull'array in memoria:
 La tabella evidenzia problematiche ingegneristiche fondamentali legate alla concorrenza dei dati. Poiché i Worker Thread operano in parallelo sul medesimo array dinamico globale, le collisioni di accesso (\textit{Data Races}) si presentano costantemente.
 
 \begin{sloppypar}
-\textbf{Ottimizzazione tramite Lock a Grana Fine (Fine-Grained Locking)}:
-L'adozione di un unico Mutex globale per tutto il database in memoria penalizza il parallelismo, forzando le transazioni REST ad accodarsi artificialmente. Un'evoluzione notevole di questa architettura risiede nella sostituzione del \texttt{pthread\_mutex\_t} con un \texttt{pthread\_rwlock\_t} (Read-Write Lock). Le architetture REST mostrano intrinsecamente un rapporto sbilanciato a favore delle letture rispetto alle scritture. Un lock di tipo RW consente a infiniti Worker Thread di invocare blocchi in lettura (\texttt{pthread\_rwlock\_rdlock()}), processando parallelamente centinaia di richieste \texttt{GET}. Nel momento in cui un pacchetto \texttt{POST} o \texttt{DELETE} richiede l'accesso al dato, il relativo thread chiede il lock in scrittura (\texttt{pthread\_rwlock\_wrlock()}); il sistema attenderà il completamento delle letture in corso e garantirà accesso esclusivo alla mutazione della memoria.
+\textbf{Sincronizzazione Centralizzata tramite Mutex}:
+Per prevenire attivamente le \textit{race conditions}, l'architettura sfrutta l'adozione di un Mutex globale (\texttt{pthread\_mutex\_t}) per proteggere l'intero database in memoria. Questo approccio garantisce l'assoluta coerenza strutturale forzando le transazioni REST ad accodarsi ordinatamente per l'accesso esclusivo all'area di memoria, annullando in radice qualsiasi scenario di corruzione dei dati. In questo modo ogni Thread Worker gode dell'isolamento completo sul blocco della memoria per la durata dell'intera operazione CRUD sia in lettura che in scrittura.
 
 \textbf{Integrità della Memoria Dinamica e De-frammentazione (DELETE)}:
-L'operazione di DELETE impone considerazioni critiche nei linguaggi non provvisti di Garbage Collector automatico. Lasciare un campo azzerato all'interno di un vettore genera rapida frammentazione. I programmatori ricorrono alla transizione di memoria con shift a sinistra, sfruttando routine di libreria altamente ottimizzate a livello assembly come \texttt{memmove()} (preferita a \texttt{memcpy()} in quanto garantisce la sicurezza in caso di sovrapposizione delle aree di memoria).
+L'operazione di DELETE impone considerazioni critiche nei linguaggi non provvisti di Garbage Collector automatico. Lasciare un campo azzerato all'interno di un vettore genera rapida frammentazione. Al fine di risolvere il problema internamente senza affidarsi a librerie esterne, l'implementazione esegue uno shift a sinistra progressivo impiegando un ciclo \textit{for} dedicato, scorrendo e sovrascrivendo rigorosamente i record eliminati e ricompattando la memoria dinamicamente all'interno della medesima sessione critica di lock.
 \end{sloppypar}
 
 \newpage

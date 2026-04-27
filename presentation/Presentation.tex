@@ -171,21 +171,21 @@ int rm_create(resource_manager_t* rm, const char* room, const char* student) {
     
     \vspace{0.4cm}
     \begin{block}{Autenticazione}
-        Le rotte di inserimento e modifica richiedono un header \texttt{Authorization: Basic} che viene decodificato dal parser nativo in C e confrontato prima di rilasciare l'accesso.
+        Le rotte di inserimento e modifica richiedono un header \texttt{Authorization: Basic} che viene confrontato nativamente in C con il token in Base64 prima di rilasciare l'accesso.
     \end{block}
 \end{frame}
 
 \begin{frame}{6. Ottimizzazioni Architetturali}
-    \begin{block}{Lock a Grana Fine (Fine-Grained Locking)}
-        Nelle architetture REST le letture superano enormemente le scritture.
-        Sostituire il \texttt{pthread\_mutex\_t} con un \textbf{Read-Write Lock} (\texttt{pthread\_rwlock\_t}) consente a infiniti Worker Thread di leggere simultaneamente lo stato, bloccando l'accesso in mutua esclusione solo durante le scritture (\texttt{POST}/\texttt{DELETE}).
+    \begin{block}{Sincronizzazione Centralizzata (Mutex)}
+        L'architettura previene attivamente \textit{race conditions} e corruzione dei dati in memoria.
+        L'impiego rigoroso del \textbf{Mutex} (\texttt{pthread\_mutex\_t}) garantisce che l'accesso alla memoria condivisa avvenga in totale mutua esclusione per ogni Worker Thread, assicurando l'assoluta coerenza transazionale sia in lettura che in scrittura.
     \end{block}
     
     \vspace{0.3cm}
     
     \begin{block}{De-frammentazione della Memoria Dinamica}
         Poiché il C è sprovvisto di Garbage Collector, la rimozione logica di una prenotazione (\texttt{DELETE}) espone al rischio di frammentazione del vettore.
-        L'implementazione impiega uno \textbf{shift a sinistra} tramite \texttt{memmove()} all'interno dell'area di memoria esclusiva, garantendo la compattezza continua dell'array dinamico.
+        L'implementazione impiega uno \textbf{shift a sinistra} progressivo tramite un \textbf{ciclo iterativo for} all'interno dell'area protetta, garantendo la ricompattazione continua dell'array dinamico senza librerie esterne.
     \end{block}
 \end{frame}
 

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/socket.h>
 
 #define AUTH_TOKEN "Basic YWRtaW46cGFzc3dvcmQ=" // admin:password
 
@@ -18,7 +19,7 @@ static void send_response(int socket, const char* status, const char* content_ty
         "\r\n"
         "%s",
         status, content_type, body ? strlen(body) : 0, body ? body : "");
-    write(socket, response, len);
+    send(socket, response, len, MSG_NOSIGNAL);
 }
 
 void handle_client(int client_socket, resource_manager_t* rm) {
@@ -28,6 +29,13 @@ void handle_client(int client_socket, resource_manager_t* rm) {
         close(client_socket);
         return;
     }
+    
+    if (bytes_read == sizeof(buffer) - 1) {
+        send_response(client_socket, "413 Payload Too Large", "text/plain", "Payload exceeds maximum allowed size");
+        close(client_socket);
+        return;
+    }
+    
     buffer[bytes_read] = '\0';
 
     http_request_t request;
