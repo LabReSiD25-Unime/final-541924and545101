@@ -1,21 +1,21 @@
-\frametitle{4. Thread Safety sulle Prenotazioni}
-Tutte le chiamate API che leggono o modificano la lista delle aule sono protette mediante un costrutto \textbf{Mutex} centralizzato. Questo garantisce l'isolamento transazionale ed evita corruzioni (Data Race).
+\frametitle{8. Sincronizzazione ed Eliminazione Atomica}
+Le operazioni logiche complesse, come la rimozione con ricompattazione (shift), devono avvenire integralmente sotto lock.
 
 \begin{lstlisting}[style=cstyle]
-int rm_create(resource_manager_t* rm, const char* room, const char* student) {
-    pthread_mutex_lock(&rm->mutex); // ACQUISIZIONE LOCK
-
-    if (rm->count >= MAX_RESERVATIONS) {
-        pthread_mutex_unlock(&rm->mutex);
-        return -1;
+int rm_delete(resource_manager_t* rm, int id) {
+    pthread_mutex_lock(&rm->mutex); // Sezione Critica
+    for (int i = 0; i < rm->count; i++) {
+        if (rm->reservations[i].id == id) {
+            // Shift a sinistra per ricompattare l'array
+            for (int j = i; j < rm->count - 1; j++) {
+                rm->reservations[j] = rm->reservations[j + 1];
+            }
+            rm->count--;
+            pthread_mutex_unlock(&rm->mutex);
+            return 0;
+        }
     }
-
-    // Inserimento sicuro dei dati nella memoria condivisa
-    strncpy(rm->reservations[rm->count].room, room, 127);
-    strncpy(rm->reservations[rm->count].student, student, 127);
-    rm->count++;
-
-    pthread_mutex_unlock(&rm->mutex); // RILASCIO LOCK
-    return rm->count - 1;
+    pthread_mutex_unlock(&rm->mutex);
+    return -1;
 }
 \end{lstlisting}
