@@ -4,6 +4,7 @@ server_http/bin/
 
 presentation/
 report/
+assets/
 
 # LaTeX auxiliary files
 *.aux

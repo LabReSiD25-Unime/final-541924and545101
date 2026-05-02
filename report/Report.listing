@@ -1,3 +1,0 @@
-$ ./bin/server_http &
-$ ab -n 10000 -c 100 -H "Authorization: Basic YWRtaW46cGFzc3dvcmQ=" \
-  http://localhost:8080/reservations
