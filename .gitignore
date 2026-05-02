@@ -2,8 +2,6 @@
 server_http/obj/
 server_http/bin/
 
-presentation/
-report/
 
 
 # LaTeX auxiliary files
@@ -18,6 +16,7 @@ report/
 *.snm
 *.vrb
 *.listing
+*.tex
 
 # OS generated files
 .DS_Store
