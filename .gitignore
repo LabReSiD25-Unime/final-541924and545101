@@ -2,6 +2,9 @@
 server_http/obj/
 server_http/bin/
 
+presentation/
+report/
+
 # LaTeX auxiliary files
 *.aux
 *.log
