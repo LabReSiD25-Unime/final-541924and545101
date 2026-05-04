@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,6 +6,7 @@
 #include "../include/resource_manager.h"
 #include "../include/http_handler.h"
 
+#define _GNU_SOURCE
 #define PORT 8080
 #define THREAD_COUNT 10
 
